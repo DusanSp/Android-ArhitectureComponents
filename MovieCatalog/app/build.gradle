@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.example.dusan.moviecatalog"
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,14 +17,34 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+    provided "org.projectlombok:lombok:1.16.18"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    compile "com.android.support:appcompat-v7:${rootProject.ext.appcompatv7}"
+    compile "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintlayout}"
+    compile "com.android.support:recyclerview-v7:${rootProject.ext.recyclerView}"
+    compile 'com.android.support:design:25.3.1'
+
+    // Retrofit
+    compile "com.squareup.okhttp3:okhttp:${rootProject.ext.okhttp}"
+    compile "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.interceptor}"
+    compile "com.squareup.retrofit2:retrofit:${rootProject.ext.retrofit}"
+
+    // JSON Parsing
+    compile "com.google.code.gson:gson:${rootProject.ext.gson}"
+    compile "com.squareup.retrofit2:converter-gson:${rootProject.ext.convertergson}"
+
+    // Arhitecture components
+    compile "android.arch.lifecycle:runtime:${rootProject.ext.lifecycle_runtime}"
+    compile "android.arch.lifecycle:extensions:${rootProject.ext.lifecycle_extensions}"
+    annotationProcessor "android.arch.lifecycle:compiler:${rootProject.ext.lifecycle_compiler}"
+
+    // Picasso
+    compile "com.squareup.picasso:picasso:${rootProject.ext.picasso}"
 }
