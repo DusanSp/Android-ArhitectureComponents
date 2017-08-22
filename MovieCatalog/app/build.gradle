@@ -47,4 +47,5 @@ dependencies {
 
     // Picasso
     compile "com.squareup.picasso:picasso:${rootProject.ext.picasso}"
+    testCompile 'junit:junit:4.12'
 }

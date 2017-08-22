@@ -23,7 +23,7 @@ public class TopMoviesAdapter extends BaseAdapter<ViewHolder, Movie> {
   private OnItemClick listener;
   private List<Movie> mMovieList = new ArrayList<>();
 
-  public void initListener(OnItemClick listener) {
+  public void setListener(OnItemClick listener) {
     this.listener = listener;
   }
 
@@ -62,12 +62,10 @@ public class TopMoviesAdapter extends BaseAdapter<ViewHolder, Movie> {
     notifyDataSetChanged();
   }
 
-
-  interface OnItemClick {
+  public interface OnItemClick {
 
     void onItemClick(int id);
   }
-
 
   class ViewHolder extends RecyclerView.ViewHolder {
 

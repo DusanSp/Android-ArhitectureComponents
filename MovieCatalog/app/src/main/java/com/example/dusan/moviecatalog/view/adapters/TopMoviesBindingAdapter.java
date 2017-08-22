@@ -11,7 +11,7 @@ import java.util.List;
 
 public final class TopMoviesBindingAdapter {
 
-  @BindingAdapter(value = "adapter")
+  @BindingAdapter(value = "adapterData")
   public static void setData(RecyclerView recyclerView, MoviesResponse moviesResponse) {
     RecyclerView.Adapter adapter = recyclerView.getAdapter();
 

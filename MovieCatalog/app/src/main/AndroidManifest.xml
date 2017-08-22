@@ -12,13 +12,19 @@
     android:supportsRtl="true"
     android:name=".view.application.MovieCatalogApplication"
     android:theme="@style/AppTheme">
-    <activity android:name=".view.activities.TopMoviesActivity">
+
+    <activity android:name=".view.activities.TopMoviesActivity"
+      android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <activity android:name=".view.activities.DetailMovieActivity"
+      android:screenOrientation="portrait"/>
+
   </application>
 
 </manifest>
