@@ -28,7 +28,7 @@ public class TopMoviesViewModel extends ViewModel{
     return mData;
   }
 
-  private void loadData(int page) {
+  public void loadData(int page) {
     mData.addSource(mRepository.getMovies(page), new Observer<MoviesResponse>() {
       @Override
       public void onChanged(@Nullable MoviesResponse movieList) {

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.dusan.moviecatalog.R;
 import com.example.dusan.moviecatalog.model.Movie;
+import com.example.dusan.moviecatalog.model.MoviesDataHolder;
 import com.example.dusan.moviecatalog.utils.PictureUtils;
 import com.example.dusan.moviecatalog.view.adapters.TopMoviesAdapter.ViewHolder;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import java.util.List;
 public class TopMoviesAdapter extends BaseAdapter<ViewHolder, Movie> {
 
   private OnItemClick listener;
-  private List<Movie> mMovieList = new ArrayList<>();
 
   public void setListener(OnItemClick listener) {
     this.listener = listener;
@@ -35,7 +35,7 @@ public class TopMoviesAdapter extends BaseAdapter<ViewHolder, Movie> {
 
   @Override
   public void onBindViewHolder(final ViewHolder holder, int position) {
-    final Movie movie = mMovieList.get(position);
+    final Movie movie = MoviesDataHolder.getInstance().getMovies().get(position);
 
     holder.mTitle.setText(movie.getTitle());
     holder.mRating.setText(String.valueOf(movie.getAverageRating()));
@@ -53,13 +53,15 @@ public class TopMoviesAdapter extends BaseAdapter<ViewHolder, Movie> {
 
   @Override
   public int getItemCount() {
-    return mMovieList.size();
+    return MoviesDataHolder.getInstance().getMovies().size();
   }
 
   @Override
   public void setData(List<Movie> data) {
-    mMovieList = data;
-    notifyDataSetChanged();
+    if(data != null) {
+      MoviesDataHolder.getInstance().setMovies(data);
+      notifyDataSetChanged();
+    }
   }
 
   public interface OnItemClick {

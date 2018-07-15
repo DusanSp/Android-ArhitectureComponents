@@ -8,12 +8,15 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.dusan.moviecatalog.R;
 import com.example.dusan.moviecatalog.databinding.FragmentTopMoviesBinding;
+import com.example.dusan.moviecatalog.model.MoviesDataHolder;
 import com.example.dusan.moviecatalog.model.MoviesResponse;
+import com.example.dusan.moviecatalog.utils.EndlessRecyclerViewScrollListener;
 import com.example.dusan.moviecatalog.view.activities.DetailMovieActivity;
 import com.example.dusan.moviecatalog.view.adapters.TopMoviesAdapter;
 import com.example.dusan.moviecatalog.viewmodel.TopMoviesViewModel;
@@ -25,6 +28,8 @@ import com.example.dusan.moviecatalog.viewmodel.TopMoviesViewModel;
 public class TopMoviesListFragment extends LifecycleFragment implements TopMoviesAdapter.OnItemClick{
 
   private FragmentTopMoviesBinding mBinding;
+  private TopMoviesViewModel mViewModel;
+  private int mTotalPages;
 
   public static TopMoviesListFragment newInstance() {
     return new TopMoviesListFragment();
@@ -43,10 +48,26 @@ public class TopMoviesListFragment extends LifecycleFragment implements TopMovie
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    mBinding.recyclerMovies.setLayoutManager(new LinearLayoutManager(getContext()));
+    initRecyclerView();
+  }
+
+  private void initRecyclerView() {
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+    mBinding.recyclerMovies.setLayoutManager(linearLayoutManager);
     TopMoviesAdapter topMoviesAdapter = new TopMoviesAdapter();
     topMoviesAdapter.setListener(this);
     mBinding.recyclerMovies.setAdapter(topMoviesAdapter);
+    mBinding.recyclerMovies.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+      @Override
+      public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+        if (mViewModel != null) {
+          if(page < mTotalPages) {
+            page++;
+            mViewModel.loadData(page);
+          }
+        }
+      }
+    });
   }
 
   @Override
@@ -57,11 +78,16 @@ public class TopMoviesListFragment extends LifecycleFragment implements TopMovie
   }
 
   private void initViewModel() {
-    TopMoviesViewModel viewModel = ViewModelProviders.of(this).get(TopMoviesViewModel.class);
-    viewModel.getData().observe(TopMoviesListFragment.this, new Observer<MoviesResponse>() {
+    mViewModel = ViewModelProviders.of(this).get(TopMoviesViewModel.class);
+    mViewModel.getData().observe(TopMoviesListFragment.this, new Observer<MoviesResponse>() {
       @Override
       public void onChanged(@Nullable MoviesResponse moviesResponse) {
-        mBinding.setData(moviesResponse);
+
+        if(moviesResponse != null) {
+          MoviesDataHolder.getInstance().setMovies(moviesResponse.getResults());
+          mTotalPages = moviesResponse.getTotalResults();
+          mBinding.recyclerMovies.getAdapter().notifyDataSetChanged();
+        }
       }
     });
   }
